@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon ./build/index.js",
     "watch": "tsc -w -p ./tsconfig.json",
+    "compile": "tsc -p ./tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

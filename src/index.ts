@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {TestModel} from './interfaces/testModel';
+import {TestModel} from './app/interfaces/testModel';
 import admin from 'firebase-admin';
 
 
@@ -24,10 +24,11 @@ app.get('/', async (req, res) => {
     const userOb: TestModel[] = [];
 
     userRef.forEach(user => userOb.push(user.data() as TestModel));
-    res.status(200).send(userOb)
+    res.status(200).send(userOb);
+    console.log(userOb);
 });
 
 
 app.listen(port, function () {
-    console.log(`Écoute sur le port : ${port}`);
+    console.log(`--------------> Écoute sur le port : ${port}`);
 });
