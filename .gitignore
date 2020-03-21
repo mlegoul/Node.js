@@ -3,7 +3,7 @@
 build
 
 # ENV
-src/app/env
+src/app/env/key.json
 
 # compiled output
 /dist
