@@ -1,23 +1,32 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import {TestModel} from './interfaces/testModel';
 import admin from 'firebase-admin';
 
-const serviceAccount = require('src/app/env/key.json');
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://node-js-a9f9e.firebaseio.com"
-});
 
 const app = express();
 const port = 3000;
+const serviceAccount = require('/Users/mehdi/WebstormProjects/Node.js/src/app/env/key.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://nodejs-af04c.firebaseio.com'
+});
+
+
+const ref = admin.firestore();
+const dbTest = ref.collection('test');
 
 app.use(bodyParser.json());
 
+app.get('/', async (req, res) => {
+    const userRef = await dbTest.get();
+    const userOb: TestModel[] = [];
 
-app.get('/', async function (req: any, res: any) {
-    await res.send('Hello boys!');
+    userRef.forEach(user => userOb.push(user.data() as TestModel));
+    res.status(200).send(userOb)
 });
+
 
 app.listen(port, function () {
     console.log(`Écoute sur le port : ${port}`);

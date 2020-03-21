@@ -11,11 +11,9 @@
     "moduleResolution": "node"
   },
   "include": [
-    "./src/**/*"
+    "./src/app/index.ts"
   ],
   "exclude": [
-    "node_modules",
-    "build",
-    ".idea"
+    "./src/app/interfaces"
   ]
 }
