@@ -48,6 +48,6 @@ src/env/
 
 # Firebase
 .firebaserc
-firebase.json
-firestore.indexes.json
-firestore.rules
+/firebase.json
+/firestore.indexes.json
+/firestore.rules
