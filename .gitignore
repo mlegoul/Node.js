@@ -48,4 +48,4 @@ testem.log
 Thumbs.db
 
 # ENV
-src/app/env/
+src/env/

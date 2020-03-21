@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {TestModel} from './app/interfaces/testModel';
+import {TestModel} from './interfaces/testModel';
 import admin from 'firebase-admin';
 
 
