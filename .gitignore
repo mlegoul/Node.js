@@ -1,4 +1,10 @@
 
+# Build
+build
+
+# ENV
+src/app/env
+
 # compiled output
 /dist
 /tmp
