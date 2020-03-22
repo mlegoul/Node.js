@@ -17,6 +17,16 @@ app.get('/', async (req, res) => {
     console.log(userOb);
 });
 
+app.post('/addTest', async (req, res) => {
+    const addNewTest = await dbTest.add(req.body);
+    res.status(201).send(addNewTest);
+});
+
+app.delete('/deleteTest/:id', async (req, res) =>{
+    const deleteDoc = await dbTest.doc(req.params.id).delete();
+    res.send(deleteDoc);
+});
+
 app.listen(port, function () {
     console.log(`--------------> Écoute sur le port : ${port}`);
 });
