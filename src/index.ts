@@ -5,26 +5,51 @@ import {dbTest} from './env/database';
 
 
 const app = express();
-const port = 3000;
+const port: number = 3000;
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
-    const userRef = await dbTest.get();
-    const userOb: TestModel[] = [];
+    try {
+        const tab: TestModel[] = [];
+        const testRef = await dbTest.get();
 
-    userRef.forEach(user => userOb.push(user.data() as TestModel));
-    res.status(200).send(userOb);
-    console.log(userOb);
+        testRef.forEach(test => tab.push(test.data() as TestModel));
+        return res.send(tab);
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
 });
 
 app.post('/addTest', async (req, res) => {
-    const addNewTest = await dbTest.add(req.body);
-    res.status(201).send(addNewTest);
+    try {
+        const addNewTest = await dbTest.add(req.body);
+        return res.send(addNewTest);
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
 });
 
-app.delete('/deleteTest/:id', async (req, res) =>{
-    const deleteDoc = await dbTest.doc(req.params.id).delete();
-    res.send(deleteDoc);
+app.delete('/deleteTest/:id', async (req, res) => {
+    try {
+        const deleteDoc = await dbTest.doc(req.params.id).delete();
+        return res.send(deleteDoc);
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+});
+
+app.put('/modifyTest/:id', async (req, res) => {
+    try {
+        const newChange = req.body;
+        const modifyTest = await dbTest.doc(req.params.id).update(newChange);
+        return res.send(modifyTest);
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
 });
 
 app.listen(port, function () {
