@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "module": "commonjs",
     "outDir": "./dist",
+    "module": "commonjs",
+    "target": "ES2017",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -10,10 +10,10 @@
     "removeComments": true,
     "moduleResolution": "node"
   },
-  "include": [
-    "./src/index.ts"
+  "file": [
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/*/*.ts"
   ]
 }
