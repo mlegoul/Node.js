@@ -1,1 +1,5 @@
-<p>monitoring works!</p>
+<section *ngFor="let data of jsonModelElement">
+
+  <h4>{{ data.order }}  |  {{ data.created | json }}  |  {{ data.test }}|  {{ data.uid }}</h4>
+
+</section>

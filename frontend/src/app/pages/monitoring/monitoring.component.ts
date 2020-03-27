@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {RssFeedService} from '../../services/rss-feed.service';
+import {take, tap} from 'rxjs/operators';
+import {JsonModel} from '../../models/json-model';
+import {element} from 'protractor';
 
 @Component({
   selector: 'app-monitoring',
@@ -7,9 +11,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MonitoringComponent implements OnInit {
 
-  constructor() { }
+  jsonModelElement: JsonModel[];
 
-  ngOnInit(): void {
+  constructor(
+    private rssFeedService: RssFeedService,
+  ) {
   }
 
+  ngOnInit(): void {
+    this.getDataFromRssFeedService();
+  }
+
+  getDataFromRssFeedService() {
+    return this.rssFeedService.apiGetRequest$()
+      .pipe(
+        take(1),
+        tap((data) => this.jsonModelElement = Object.values(data)),
+        tap(x => console.log(x)),
+      )
+      .subscribe()
+  }
 }
