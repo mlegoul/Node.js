@@ -13,10 +13,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', async (req, res) => {
+
     try {
+        const test = [];
         const rssFeed = await axios.get(`${BASE_URL}`);
         const xmL2JSON = convert.xml2js(rssFeed.data, {compact: true});
-        return res.send(xmL2JSON);
+        const tab = Object.values(xmL2JSON)
+        return res.send(tab);
+
     } catch (err) {
         throw err;
     }
