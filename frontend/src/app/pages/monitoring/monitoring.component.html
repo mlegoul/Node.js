@@ -1,5 +1,12 @@
+<section [className]="hiddenAlertMessage()" *ngIf="showAlterMessage">
+  <div class="alert alert-primary" role="alert">
+    <h3>Work in progress !</h3>
+  </div>
+</section>
+
+
 <section *ngFor="let data of jsonModelElement">
-
-  <h4>{{ data.order }}  |  {{ data.created | json }}  |  {{ data.test }}|  {{ data.uid }}</h4>
-
+  <div>
+    <h4>{{ data.order }}  |  {{ data.created | json }}  |  {{ data.test }}|  {{ data.uid }}</h4>
+  </div>
 </section>

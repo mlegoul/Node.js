@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {RssFeedService} from '../../services/rss-feed.service';
 import {take, tap} from 'rxjs/operators';
 import {JsonModel} from '../../models/json-model';
-import {element} from 'protractor';
 
 @Component({
   selector: 'app-monitoring',
@@ -11,6 +10,7 @@ import {element} from 'protractor';
 })
 export class MonitoringComponent implements OnInit {
 
+  showAlterMessage: boolean = true;
   jsonModelElement: JsonModel[];
 
   constructor(
@@ -22,11 +22,18 @@ export class MonitoringComponent implements OnInit {
     this.getDataFromRssFeedService();
   }
 
+  hiddenAlertMessage() {
+    setTimeout(() => {
+      this.showAlterMessage = false;
+    }, 5000)
+  }
+
+
   getDataFromRssFeedService() {
     return this.rssFeedService.apiGetRequest$()
       .pipe(
         take(1),
-        tap((data) => this.jsonModelElement = Object.values(data)),
+        // tap((data) => this.jsonModelElement = Object.values(data)),
         tap(x => console.log(x)),
       )
       .subscribe()

@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import axios from 'axios';
-import convert from 'xml-js';
+import convert, {xml2js} from 'xml-js';
 import {TestModel} from './interfaces/testModel';
 import {dbTest} from './env/database';
 
@@ -12,20 +12,29 @@ const port: number = 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
+
 app.get('/', async (req, res) => {
 
-    try {
-        const test = [];
-        const rssFeed = await axios.get(`${BASE_URL}`);
-        const xmL2JSON = convert.xml2js(rssFeed.data, {compact: true});
-        const tab = Object.values(xmL2JSON)
-        return res.send(tab);
+    const rssFeed = await axios.get(`${BASE_URL}`);
+    const xmL2JS = convert.xml2js(rssFeed.data, {compact: true});
+    const tab = Object.values(xmL2JS).splice(1,1);
+    return res.send(tab);
 
-    } catch (err) {
-        throw err;
-    }
+
+
+
+
+
+
+
 
 });
+
+
+
+
+
+
 
 app.post('/addTest', async (req, res) => {
     try {
