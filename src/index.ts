@@ -17,14 +17,14 @@ app.get('/', async (req, res) => {
 
     const rssFeed = await axios.get(`${BASE_URL}`);
     const xmL2JS = convert.xml2js(rssFeed.data).elements;
-    const tab1 = Object.values(xmL2JS)
-        .map((value => value as RssModel))
-        .map(value => value.elements);
+    const tab = Object.values(xmL2JS)
+        .map(value1 => value1 as RssModel)
+        .map(value2 => value2.elements);
 
-    for (let data in tab1) {
-        res.send(Object.values(tab1[data])
-            .map(value => value as RssModel)
-            .map(value => value.elements)
+    for (let data in tab) {
+        res.send(Object.values(tab[data])
+            .map(value1 => value1 as RssModel)
+            .map(value2 => value2.elements)
         );
     }
 });
@@ -62,6 +62,6 @@ app.put('/modifyTest/:id', async (req, res) => {
 });
 
 
-app.listen(port, function () {
+app.listen(port, () => {
     console.log(`--------------> Écoute sur le port : ${port}`);
 });
