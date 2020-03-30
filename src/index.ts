@@ -2,8 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import axios from 'axios';
-import convert, {xml2js} from 'xml-js';
-import {TestModel} from './interfaces/testModel';
+import convert from 'xml-js';
+import {RssModel} from './interfaces/rssModel';
 import {dbTest} from './env/database';
 
 const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
@@ -16,24 +16,18 @@ app.use(cors());
 app.get('/', async (req, res) => {
 
     const rssFeed = await axios.get(`${BASE_URL}`);
-    const xmL2JS = convert.xml2js(rssFeed.data, {compact: true});
-    const tab = Object.values(xmL2JS).splice(1,1);
-    return res.send(tab);
+    const xmL2JS = convert.xml2js(rssFeed.data).elements;
+    const tab1 = Object.values(xmL2JS)
+        .map((value => value as RssModel))
+        .map(value => value.elements);
 
-
-
-
-
-
-
-
-
+    for (let data in tab1) {
+        res.send(Object.values(tab1[data])
+            .map(value => value as RssModel)
+            .map(value => value.elements)
+        );
+    }
 });
-
-
-
-
-
 
 
 app.post('/addTest', async (req, res) => {
@@ -71,16 +65,3 @@ app.put('/modifyTest/:id', async (req, res) => {
 app.listen(port, function () {
     console.log(`--------------> Écoute sur le port : ${port}`);
 });
-
-/*
-
-try {
-    const tab: TestModel[] = [];
-    const testRef = await dbTest.get();
-
-    testRef.forEach(test => tab.push(test.data() as TestModel));
-    return res.send(tab);
-} catch (err) {
-    console.log(err);
-    throw err;
-}*/
