@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RssFeedService} from '../../services/rss-feed.service';
 import {take, tap} from 'rxjs/operators';
 import {JsonModel} from '../../models/json-model';
@@ -8,7 +8,7 @@ import {JsonModel} from '../../models/json-model';
   templateUrl: './monitoring.component.html',
   styleUrls: ['./monitoring.component.scss']
 })
-export class MonitoringComponent implements OnInit {
+export class MonitoringComponent implements OnInit, OnDestroy {
 
   showAlterMessage: boolean = true;
   jsonModelElement: JsonModel[];
@@ -22,6 +22,10 @@ export class MonitoringComponent implements OnInit {
     this.getDataFromRssFeedService();
   }
 
+  ngOnDestroy(): void {
+    this.getDataFromRssFeedService().unsubscribe();
+  }
+
   hiddenAlertMessage() {
     setTimeout(() => {
       this.showAlterMessage = false;
@@ -33,7 +37,7 @@ export class MonitoringComponent implements OnInit {
     return this.rssFeedService.apiGetRequest$()
       .pipe(
         take(1),
-        // tap((data) => this.jsonModelElement = Object.values(data)),
+        tap((data) => this.jsonModelElement = Object.values(data)),
         tap(x => console.log(x)),
       )
       .subscribe()
