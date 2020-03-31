@@ -4,13 +4,14 @@
 
    -  Part 1 : the Backend
    
-   
+   First install the *dependencies* and compile with `compile` and run the server with `start:server`.
    
 
    - Part 2 : the Frontend
+   Go in the frontend directory and install the *dependencies* also and run the command `start:front`.
 
 
-### 2) Shema compact :
+### 2) Shema global :
 
 
 ```
