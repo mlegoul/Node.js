@@ -24,7 +24,8 @@ app.get('/', async (req, res) => {
     for (let data in tab) {
         res.send(Object.values(tab[data])
             .map(value1 => value1 as RssModel)
-            .map(value2 => value2.elements)
+            .map(value2 => Object.values(value2.elements)
+                .splice(7,59))
         );
     }
 });
