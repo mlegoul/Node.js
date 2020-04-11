@@ -17,16 +17,22 @@ app.get('/', async (req, res) => {
 
     const rssFeed = await axios.get(`${BASE_URL}`);
     const xmL2JS = convert.xml2js(rssFeed.data).elements;
+
     const tab = Object.values(xmL2JS)
         .map(value1 => value1 as RssModel)
         .map(value2 => value2.elements);
 
     for (let data in tab) {
-        res.send(Object.values(tab[data])
+        res.send(Object.values(tab[data] as RssModel)
             .map(value1 => value1 as RssModel)
             .map(value2 => Object.values(value2.elements)
-                .splice(7,59))
-        );
+                .splice(7, 10)
+                .map(value1 => value1 as RssModel)
+                .map(value2 => Object.values(value2.elements)
+                    .map(value3 => Object.values(value3))
+                )
+            )
+        )
     }
 });
 
@@ -66,3 +72,22 @@ app.put('/modifyTest/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`--------------> Écoute sur le port : ${port}`);
 });
+
+
+/*const rssFeed = await axios.get(`${BASE_URL}`);
+const xmL2JS = convert.xml2js(rssFeed.data).elements;
+
+const tab = Object.values(xmL2JS)
+    .map(value1 => value1 as RssModel)
+    .map(value2 => value2.elements);
+
+for (let data in tab) {
+    res.send(Object.values(tab[data])
+        .map(value1 => value1 as RssModel)
+        .map(value2 => Object.values(value2.elements)
+            .splice(7, 10)
+            .map(value1 => value1 as RssModel)
+            .map(value2 => Object.values(value2.elements))
+        )
+    )
+}*/
