@@ -7,6 +7,7 @@ import {HeaderModule} from './components/header/header.module';
 import {FooterModule} from './components/footer/footer.module';
 import {HttpClientModule} from '@angular/common/http';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     FooterModule,
     HttpClientModule,
     FontAwesomeModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
