@@ -36,10 +36,4 @@ testem.log
 Thumbs.db
 
 # Environment
-src/env/
-
-# Firebase
-.firebaserc
-firebase.json
-firestore.indexes.json
-firestore.rules
+src/app/env/
