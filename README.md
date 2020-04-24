@@ -45,7 +45,7 @@ src
 ├── env
 │   ├── database.ts
 │   └── key.json
-├── index.ts
+├── server.ts
 └── interfaces
     └── rssModel.ts
 ├── node_modules
