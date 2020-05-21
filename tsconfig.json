@@ -11,8 +11,7 @@
     "moduleResolution": "node"
   },
   "exclude": [
-    "node_modules",
-    "frontend"
+    "node_modules"
   ],
   "include": [
     "src/**/*.ts"

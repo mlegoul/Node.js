@@ -1,7 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import convert from 'xml-js';
-import {RssModel} from './app/models/rssModel';
+import {RssModel} from './src/models/rssModel';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
