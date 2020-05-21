@@ -4,7 +4,7 @@
   "description": "Make CRUD with Node.js",
   "main": "index.js",
   "scripts": {
-    "start:server": "nodemon ./dist/server.js",
+    "start:server": "nodemon ./dist/index.js",
     "watch": "tsc -w -p tsconfig.json",
     "compile": "tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"

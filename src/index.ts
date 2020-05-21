@@ -4,12 +4,10 @@ import cors from 'cors';
 import router from './routes/routing';
 
 const app = express();
-app.use(bodyParser.json());
-app.use(cors());
-
-
 const port: number = 3000;
 
+app.use(bodyParser.json());
+app.use(cors());
 app.use('/', router);
 
 
