@@ -1,21 +1,14 @@
 import express from 'express';
 import axios from 'axios';
 import convert from 'xml-js';
-import {RssModel} from './src/models/rssModel';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+import {RssModel} from '../models/rssModel';
 
 
+const router = express.Router();
 const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
-const port: number = 3000;
 
 
-app.get('/', async (req, res) => {
-
+router.get('/', ( async (req, res) => {
     const rssFeed = await axios.get(`${BASE_URL}`);
     const xmL2JS = convert.xml2js(rssFeed.data).elements;
 
@@ -35,8 +28,12 @@ app.get('/', async (req, res) => {
             )
         )
     }
+}));
+
+
+router.use((req, res) => {
+    return res.status(404).send("<h2 align=center>Page Not Found !</h2>");
 });
 
-app.listen(port, () => {
-    console.log(`ÉCOUTE SUR LE PORT =====> ${port}`);
-});
+
+export default router;
