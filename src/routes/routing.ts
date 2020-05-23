@@ -18,7 +18,7 @@ router.get('/', (async (req, res) => {
                         .map((value3: RssModel) => value3.elements)
                         .map(value4 => value4
                             .slice(7, 12)
-                            .map((value4: RssModel) => value4.elements)
+                            .map((value5: RssModel) => value5.elements)
                         )
                     )
 
