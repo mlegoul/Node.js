@@ -3,4 +3,5 @@ export interface RssModel {
     type: string,
     name: string,
     attributes: object,
+    cdata: string,
 }
