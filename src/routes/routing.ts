@@ -17,8 +17,15 @@ router.get('/', (async (req, res) => {
                     .map(value2 => value2.elements
                         .map((value3: RssModel) => value3.elements)
                         .map(value4 => value4
-                            .slice(7, 12)
+                            .slice(7, 8)
                             .map((value5: RssModel) => value5.elements)
+                            .map(value6 => value6
+                                .slice(0, 1)
+                                .reduce((accumulator, content: RssModel) => {
+                                    return [content.name, ...Object.values(content.elements)
+                                        .map((value8: RssModel) => value8.cdata)];
+                                }, [])
+                            )
                         )
                     )
 
