@@ -16,14 +16,27 @@ router.get('/', (async (req, res) => {
             .map(value1 => value1.elements
                 .map((value2: RssModel) => value2.elements)
                 .map(value3 => value3
-                    .slice(7, 17)
+                    .slice(7, 8)
                     .map((value4: RssModel) => value4.elements)
                     .map(value5 => value5
-                        .slice(0, 1)
-                        .reduce((accumulator, content: RssModel) => {
-                            return [content.name, ...Object.values(content.elements)
-                                .map((value6: RssModel) => value6.cdata)];
-                        }, [])
+                        .reduce(() => {
+                            return [
+                                value5.slice(0, 1)
+                                    .reduce((acc, content: RssModel) => {
+                                        return {
+                                            ...acc, [content.name]: Object.values(content.elements)
+                                                .map((value6: RssModel) => value6.cdata).toString()
+                                        }
+                                    }, {}),
+                                value5.slice(1, 2)
+                                    .reduce((acc, content: RssModel) => {
+                                        return {
+                                            ...acc, [content.name]: Object.values(content.elements)
+                                                .map((value6: RssModel) => value6.text).toString()
+                                        }
+                                    }, {}),
+                            ]
+                        })
                     )
                 )
             )
