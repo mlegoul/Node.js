@@ -31,7 +31,7 @@ router.get('/', (async (req, res) => {
                                 value5.slice(1, 2)
                                     .reduce((acc, content: RssModel) => {
                                         return {
-                                            ...acc, [content.name]: Object.values(content.elements)
+                                            ...acc, ['created_at']: Object.values(content.elements)
                                                 .map((value6: RssModel) => value6.text).toString()
                                         }
                                     }, {}),
@@ -42,18 +42,17 @@ router.get('/', (async (req, res) => {
                                                 .map((value6: RssModel) => value6.cdata).toString()
                                         }
                                     }, {}),
-                                value5.slice(3, 4)
+                                value5.slice(4, 5)
                                     .reduce((acc, content: RssModel) => {
                                         return {
                                             ...acc, [content.name]: Object.values(content.elements)
                                                 .map((value6: RssModel) => value6.text).toString()
                                         }
                                     }, {}),
-                                value5.slice(4, 5)
+                                value5.slice(5)
                                     .reduce((acc, content: RssModel) => {
                                         return {
-                                            ...acc, [content.name]: Object.values(content.elements)
-                                                .map((value6: RssModel) => value6.text).toString()
+                                            ...acc, ['imgUrl']: Object.values(content.attributes)[0]
                                         }
                                     }, {}),
                             ]
