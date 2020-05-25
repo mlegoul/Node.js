@@ -16,7 +16,7 @@ router.get('/', (async (req, res) => {
             .map(value1 => value1.elements
                 .map((value2: RssModel) => value2.elements)
                 .map(value3 => value3
-                    .slice(7, 8)
+                    .slice(7, 17)
                     .map((value4: RssModel) => value4.elements)
                     .map(value5 => value5
                         .slice(0, 1)
@@ -29,7 +29,7 @@ router.get('/', (async (req, res) => {
             )
 
         for (let data in xmL2JS) {
-            res.send(...Object.values(xmL2JS[data]));
+            res.status(200).send(...Object.values(xmL2JS[data]));
         }
     } catch (err) {
         throw err;
