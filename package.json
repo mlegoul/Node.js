@@ -1,7 +1,7 @@
 {
   "name": "node.js",
-  "version": "0.1.0",
-  "description": "Make CRUD with Node.js",
+  "version": "1.0.0",
+  "description": "Get Rss Feed and convert it in a new JSON",
   "main": "index.js",
   "scripts": {
     "start:server": "nodemon ./dist/index.js",

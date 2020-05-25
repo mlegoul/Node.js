@@ -2,7 +2,8 @@
 
 ### 1) Summary :
 
-  > Realization of a backend that calls and transforms an rss flow in JSON and displays it via an interface in angular 9.
+  > Realization of a backend that calls and transforms an rss flow in JSON and displays. Later, the rss stream will
+  be displayed in a timeline with an front in Angular 9.
 
 ### 2) Installation :
 
