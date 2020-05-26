@@ -4,7 +4,7 @@ import db from '../db/db.config';
 const router = express.Router();
 
 
-router.get('/', db.convertRssFeedInJson);
+router.post('/api', db.postJsonInDatabase);
 
 
 router.use((req, res) => {
