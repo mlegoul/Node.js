@@ -4,8 +4,8 @@ import db from '../db/db.config';
 const router = express.Router();
 
 
-router.post('/api', db.postJsonInDatabase);
-
+router.get('/', db.getJson);
+router.post('/api', db.postJson);
 
 router.use((req, res) => {
     return res.status(404).send('<h2 align=center>Page Not Found !</h2>');
