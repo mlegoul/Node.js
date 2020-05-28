@@ -15,7 +15,7 @@ const pool = new pg.Pool({
 
 const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
 
-async function getJson(req, res) {
+async function getRss(req, res) {
 
     const rssFeed = await axios.get(`${BASE_URL}`);
 
@@ -25,7 +25,7 @@ async function getJson(req, res) {
             .map(value1 => value1.elements
                 .map((value2: RssModel) => value2.elements)
                 .map(value3 => value3
-                    .slice(7, 12)
+                    .slice(7, 17)
                     .map((value4: RssModel) => value4.elements)
                     .map(value5 => value5
                         .reduce((acc) => {
@@ -106,7 +106,7 @@ async function postRss(req, res) {
 
 
 export default {
-    getJson,
+    getRss,
     postRss,
 }
 
