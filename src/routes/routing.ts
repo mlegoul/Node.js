@@ -1,11 +1,13 @@
 import express from 'express';
 import db from '../db/db.config';
 
+
 const router = express.Router();
 
 
-router.get('/', db.getRss);
-router.post('/api', db.postRss);
+router.get('/', db.getRssFeed);
+router.post('/api', db.postRssFeedInDatabase);
+router.put('/api/:id', db.updateJsonInDatabase);
 
 
 router.use((req, res) => {
