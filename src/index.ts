@@ -4,7 +4,7 @@ import cors from 'cors';
 import router from './routes/routing';
 
 const app = express();
-const port: number = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
