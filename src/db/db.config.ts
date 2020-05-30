@@ -1,6 +1,6 @@
 import pg from 'pg';
 import axios from 'axios';
-import convert, {Element} from 'xml-js';
+import convert from 'xml-js';
 import {RssModel} from '../models/rss-model';
 
 
@@ -17,23 +17,24 @@ const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
 
 
 // Get request
-async function getRssFeed(req, res) {
+function getRssFeed(req, res) {
 
     try {
         const getRss: string = 'SELECT rss FROM rss';
 
-        await pool.query(getRss, ((err, result) => {
+        pool.query(getRss, ((err, result) => {
             if (err) {
                 return res.status(500).send({'ERROR FROM DATABASE': err.message});
             } else {
-                return res.status(200).send(
-                    result.rows
-                        .reduce((acc, value) => {
-                            return {
-                                ...acc, ...value
-                            }
-                        }, {})
-                );
+                return res.status(200)
+                    .send(
+                        result.rows
+                            .reduce((acc, value) => {
+                                return {
+                                    ...acc, ...value
+                                }
+                            }, {})
+                    );
             }
         }));
     } catch (err) {
@@ -68,7 +69,7 @@ async function convertRssToJson(): Promise<any> {
         .map(value1 => value1.elements
             .map((value2: RssModel) => value2.elements)
             .map(value3 => value3
-                .slice(7, 27)
+                .slice(7, 17)
                 .map((value4: RssModel) => value4.elements)
                 .map(value5 => value5
                     .reduce((acc) => {
@@ -139,7 +140,6 @@ async function updateJsonInDatabase(req, res) {
             if (error) {
                 return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
             } else {
-                console.log('RESULTS ====>  ', rss);
                 return res.status(200).send(results.rows);
             }
         })
