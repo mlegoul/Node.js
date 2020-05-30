@@ -4,7 +4,7 @@
   "description": "Get Rss Feed and convert it in a new JSON",
   "main": "index.js",
   "scripts": {
-    "start:server": "nodemon ./dist/index.js",
+    "start": "nodemon ./dist/index.js",
     "watch": "tsc -w -p tsconfig.json",
     "compile": "tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
