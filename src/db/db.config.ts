@@ -148,8 +148,28 @@ async function updateJsonInDatabase(req, res) {
     }
 }
 
+// Delete request
+
+async function removeJsonInDatabase(req, res) {
+
+    const id = req.params.id;
+
+    const deleteJson: string = 'DELETE FROM rss where id = $1';
+
+    pool.query(deleteJson, [id], (error, results) => {
+        if (error) {
+            return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
+        } else {
+            return res.status(200).send(`Json has been deleted with ID : ${id}`);
+        }
+    })
+
+
+}
+
 export default {
     getRssFeed,
     updateJsonInDatabase,
     postRssFeedInDatabase,
+    removeJsonInDatabase,
 }
