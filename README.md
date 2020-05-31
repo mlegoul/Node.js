@@ -9,4 +9,4 @@
 
    -  The Backend :
    
-   First install the dependencies and compile with `compile` and run the server with `start:server`.
+   First install the dependencies and compile with `compile` and run the server with `start`.

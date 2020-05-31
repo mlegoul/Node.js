@@ -1,7 +1,5 @@
 import pg from 'pg';
-import axios from 'axios';
-import convert from 'xml-js';
-import {RssModel} from '../models/rss-model';
+import rssService from '../services/rss-service';
 
 
 // Config connect bdd
@@ -13,16 +11,14 @@ const pool = new pg.Pool({
     port: 5432,
 });
 
-const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
-
 
 // Get request
-function getRssFeed(req, res) {
+function getJsonInDatabase(req, res) {
 
     try {
-        const getRss: string = 'SELECT rss FROM rss';
+        const getJson: string = 'SELECT rss FROM rss';
 
-        pool.query(getRss, ((err, result) => {
+        pool.query(getJson, ((err, result) => {
             if (err) {
                 return res.status(500).send({'ERROR FROM DATABASE': err.message});
             } else {
@@ -44,10 +40,10 @@ function getRssFeed(req, res) {
 
 
 // Post request
-async function postRssFeedInDatabase(req, res) {
+async function postJsonInDatabase(req, res) {
 
     const addJson: string = 'INSERT INTO rss (rss) VALUES ($1)';
-    const tabResult = await req.body;
+    const tabResult = await rssService.convertRssToJson();
 
     pool.query(addJson, [tabResult], (error, results) => {
 
@@ -60,82 +56,16 @@ async function postRssFeedInDatabase(req, res) {
 }
 
 
-// Convert rss to json here
-async function convertRssToJson(): Promise<any> {
-    const rssFeed = await axios.get(`${BASE_URL}`);
-
-    return convert.xml2js(rssFeed.data)
-        .elements
-        .map(value1 => value1.elements
-            .map((value2: RssModel) => value2.elements)
-            .map(value3 => value3
-                .slice(7, 17)
-                .map((value4: RssModel) => value4.elements)
-                .map(value5 => value5
-                    .reduce((acc) => {
-                        return {
-                            ...acc,
-                            ...value5.slice(0, 1)
-                                .reduce((acc, content: RssModel) => {
-                                    return {
-                                        ...acc, [content.name]: Object.values(content.elements)
-                                            .map((value6: RssModel) => value6.cdata).toString()
-                                    }
-                                }, {}),
-                            ...value5.slice(1, 2)
-                                .reduce((acc, content: RssModel) => {
-                                    return {
-                                        ...acc, ['created_at']: Object.values(content.elements)
-                                            .map((value6: RssModel) => value6.text).toString()
-                                    }
-                                }, {}),
-                            ...value5.slice(2, 3)
-                                .reduce((acc, content: RssModel) => {
-                                    return {
-                                        ...acc, [content.name]: Object.values(content.elements)
-                                            .map((value6: RssModel) => value6.cdata).toString()
-                                    }
-                                }, {}),
-                            ...value5.slice(4, 5)
-                                .reduce((acc, content: RssModel) => {
-                                    return {
-                                        ...acc, [content.name]: Object.values(content.elements)
-                                            .map((value6: RssModel) => value6.text).toString()
-                                    }
-                                }, {}),
-                            ...value5.slice(5)
-                                .reduce((acc, content: RssModel) => {
-                                    return {
-                                        ...acc, ['imgUrl']: Object.values(content.attributes)[0]
-                                    }
-                                }, {}),
-                        }
-                    }, {})
-                )
-            )
-        )
-        .reduce((acc, value) => {
-            return value
-                .reduce((acc, value) => {
-                    return {
-                        ...acc,
-                        ...Object.values(value)
-                    }
-                }, {})
-        }, {});
-}
-
-
 // Put request
 async function updateJsonInDatabase(req, res) {
 
     try {
-        const putRss: string = 'UPDATE rss SET created_at = $2, rss = $3 WHERE id = $1';
-        const rss = await convertRssToJson();
+        const putJson: string = 'UPDATE rss SET created_at = $2, rss = $3 WHERE id = $1';
+        const rss = await rssService.convertRssToJson();
         const id = req.params.id;
         const created_at = new Date();
 
-        pool.query(putRss, [id, created_at, rss], (error, results) => {
+        pool.query(putJson, [id, created_at, rss], (error, results) => {
 
             if (error) {
                 return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
@@ -148,28 +78,30 @@ async function updateJsonInDatabase(req, res) {
     }
 }
 
-// Delete request
 
+// Delete request
 async function removeJsonInDatabase(req, res) {
 
-    const id = req.params.id;
+    try {
+        const id = req.params.id;
+        const deleteJson: string = 'DELETE FROM rss where id = $1';
 
-    const deleteJson: string = 'DELETE FROM rss where id = $1';
-
-    pool.query(deleteJson, [id], (error, results) => {
-        if (error) {
-            return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
-        } else {
-            return res.status(200).send(`Json has been deleted with ID : ${id}`);
-        }
-    })
-
-
+        await pool.query(deleteJson, [id], (error, results) => {
+            if (error) {
+                return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
+            } else {
+                return res.status(200).send(`Json has been deleted with ID : ${id}`);
+            }
+        })
+    } catch (err) {
+        throw err;
+    }
 }
 
+
 export default {
-    getRssFeed,
+    getJsonInDatabase,
     updateJsonInDatabase,
-    postRssFeedInDatabase,
+    postJsonInDatabase,
     removeJsonInDatabase,
 }
