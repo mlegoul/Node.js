@@ -6,7 +6,7 @@ import {RssModel} from '../models/rss-model';
 const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
 
 
-// Convert rss to json after after call url and clean JSON
+// Convert rss to json after call url and clean JSON
 async function convertRssToJson(): Promise<any> {
     const rssFeed = await axios.get(`${BASE_URL}`);
 
@@ -15,7 +15,8 @@ async function convertRssToJson(): Promise<any> {
         .map(value1 => value1.elements
             .map((value2: RssModel) => value2.elements)
             .map(value3 => value3
-                .slice(7, 17)
+                // Only have the last five news
+                .slice(7, 12)
                 .map((value4: RssModel) => value4.elements)
                 .map(value5 => value5
                     .reduce((acc) => {
