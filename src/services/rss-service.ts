@@ -6,7 +6,7 @@ import {RssModel} from '../models/rss-model';
 const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
 
 
-// Convert rss to json
+// Convert rss to json after after call url and clean JSON
 async function convertRssToJson(): Promise<any> {
     const rssFeed = await axios.get(`${BASE_URL}`);
 
