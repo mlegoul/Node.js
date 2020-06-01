@@ -15,8 +15,8 @@ async function convertRssToJson(): Promise<any> {
         .map(value1 => value1.elements
             .map((value2: RssModel) => value2.elements)
             .map(value3 => value3
-                // Only have the last five news
-                .slice(7, 12)
+                // Only have the last ten news
+                .slice(7, 17)
                 .map((value4: RssModel) => value4.elements)
                 .map(value5 => value5
                     .reduce((acc) => {
