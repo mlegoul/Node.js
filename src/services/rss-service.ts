@@ -1,6 +1,6 @@
 import axios from 'axios';
 import convert from 'xml-js';
-import {RssModel} from '../models/rss-model';
+import {RssModel} from '../interfaces/rss-model';
 
 
 const BASE_URL: string = 'https://www.lemonde.fr/rss/en_continu.xml';
