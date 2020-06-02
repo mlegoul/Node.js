@@ -11,35 +11,11 @@ const pool = new pg.Pool({
     port: 5432,
 });
 
-async function signUp(req, res) {
-    const addNewUser: string = 'INSERT INTO users (email, hached_password) VALUES ($1, $2)';
-    const {email, password} = await req.body;
-
-    return bcrypt.hash(password, 10, (err, hash) => {
-        if (err) {
-            throw err;
-        }
-
-        pool.query(addNewUser, [email, hash], (error, results) => {
-
-            if (error) {
-                return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
-            } else {
-                return res.status(201).send({'OK ==> ': results.rows});
-            }
-        });
-    })
-}
-
-
-function login(req, res) {
-
-    console.log('test');
+async function login(req, res) {
 
 }
 
 
 export default {
     login,
-    signUp,
 }

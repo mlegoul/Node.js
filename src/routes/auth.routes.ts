@@ -1,12 +1,13 @@
 import express from 'express';
-import auth from '../auth/login';
+import auth_sign_up from '../auth/signUp';
+import auth_login from '../auth/login';
 
 
 const authRouter = express.Router();
 
 
-authRouter.post('/signup', auth.signUp);
-authRouter.post('/login', auth.login);
+authRouter.post('/signup', auth_sign_up.signUp);
+authRouter.post('/login', auth_login.login);
 
 
 authRouter.use((req, res) => {
