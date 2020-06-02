@@ -6,9 +6,9 @@ const router = express.Router();
 
 
 router.get('/', db.getJsonInDatabase);
-router.post('/api', db.postJsonInDatabase);
-router.put('/api/:id', db.updateJsonInDatabase);
-router.delete('/api/:id', db.removeJsonInDatabase);
+router.post('/', db.postJsonInDatabase);
+router.put('/:id', db.updateJsonInDatabase);
+router.delete('/:id', db.removeJsonInDatabase);
 
 
 router.use((req, res) => {
