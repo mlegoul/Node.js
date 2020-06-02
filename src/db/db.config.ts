@@ -70,7 +70,7 @@ async function updateJsonInDatabase(req, res) {
             if (error) {
                 return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
             } else {
-                return res.status(200).send(results.rows);
+                return res.status(200).send({'OK ==> ': results.rows});
             }
         })
     } catch (err) {
