@@ -17,7 +17,7 @@ async function signUp(req, res) {
         const addNewUser: string = 'INSERT INTO users (email, hached_password) VALUES ($1, $2)';
         const {email, password} = await req.body;
 
-        return bcrypt.hash(password, 10, (err, hash) => {
+        bcrypt.hash(password, 10, (err, hash) => {
             if (err) {
                 throw err;
             }

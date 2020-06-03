@@ -42,17 +42,21 @@ function getJsonInDatabase(req, res) {
 // Post request
 async function postJsonInDatabase(req, res) {
 
-    const addJson: string = 'INSERT INTO rss (rss) VALUES ($1)';
-    const tabResult = await rssService.convertRssToJson();
+    try {
+        const addJson: string = 'INSERT INTO rss (rss) VALUES ($1)';
+        const tabResult = await rssService.convertRssToJson();
 
-    pool.query(addJson, [tabResult], (error, results) => {
+        pool.query(addJson, [tabResult], (error, results) => {
 
-        if (error) {
-            return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
-        } else {
-            return res.status(201).send({'OK ==> ': results.rows})
-        }
-    });
+            if (error) {
+                return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
+            } else {
+                return res.status(201).send({'OK ==> ': results.rows})
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
 }
 
 
