@@ -44,7 +44,7 @@ async function checkIsPasswordMatch(req, result) {
                 .toString();
             const uid: string = Object.values(res.rows)
                 .map((value: AuthModel) => value.id)
-                .toString()
+                .toString();
 
             const match = await bcrypt.compare(password, hached_password);
 
@@ -53,7 +53,6 @@ async function checkIsPasswordMatch(req, result) {
             } else if (!match) {
                 return result.status(401).send('NO MATCH');
             } else {
-                console.log(uid);
                 return result.status(200).send({
                     token: jwt.sign({
                         userId: uid,
