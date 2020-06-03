@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import {AuthModel} from '../interfaces/auth-model';
 import jwt from 'jsonwebtoken';
 
-
 // Config connect bdd
 const pool = new pg.Pool({
     user: process.env.DB_USER,
@@ -24,7 +23,7 @@ async function login(req, res) {
             if (error) {
                 return res.status(500).send(error.message);
             } else {
-                return checkEmailIsValid(req, res);
+                return checkIsPasswordMatch(req, res);
             }
         });
     } catch (err) {
@@ -32,30 +31,35 @@ async function login(req, res) {
     }
 }
 
-async function checkEmailIsValid(req, result) {
+async function checkIsPasswordMatch(req, result) {
 
-    const hachPassword: string = 'SELECT hached_password FROM users';
+    const hachPassword: string = 'SELECT * FROM users';
     const {password} = await req.body;
 
 
     pool.query(hachPassword, async (err, res) => {
 
-            const convert = Object.values(res.rows)
+            const hached_password: string = Object.values(res.rows)
                 .map((value: AuthModel) => value.hached_password)
                 .toString();
-            const match = await bcrypt.compare(password, convert);
+            const uid: string = Object.values(res.rows)
+                .map((value: AuthModel) => value.id)
+                .toString()
+
+            const match = await bcrypt.compare(password, hached_password);
 
             if (err) {
                 throw err;
             } else if (!match) {
                 return result.status(401).send('NO MATCH');
             } else {
+                console.log(uid);
                 return result.status(200).send({
-                    //Signing a token with 1 hour of expiration
                     token: jwt.sign({
+                        userId: uid,
                         algorithm: 'RS256',
-                        exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                    }, 'secret')
+                        expiresIn: '1h',
+                    }, process.env.TOKEN_SECRET)
                 });
             }
         }
