@@ -1,6 +1,7 @@
 import pg from 'pg';
 import bcrypt from 'bcrypt';
 import {AuthModel} from '../interfaces/auth-model';
+import jwt from 'jsonwebtoken';
 
 
 // Config connect bdd
@@ -14,49 +15,51 @@ const pool = new pg.Pool({
 
 async function login(req, res) {
 
-    const searchEmail: string = 'SELECT email FROM users WHERE email = $1';
+    try {
+        const searchEmail: string = 'SELECT email FROM users WHERE email = $1';
+        const {email} = await req.body;
 
-    const {email} = req.body;
+        pool.query(searchEmail, [email], (error, results) => {
 
-    pool.query(searchEmail, [email], (error, results) => {
-
-        if (error) {
-            return res.status(500).send(error.message);
-        } else if (!results.rows) {
-            console.log('toto');
-
-        } else {
-            return checkEmailIsValid(req, res);
-        }
-    });
+            if (error) {
+                return res.status(500).send(error.message);
+            } else {
+                return checkEmailIsValid(req, res);
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
 }
 
-async function checkEmailIsValid(req, res) {
+async function checkEmailIsValid(req, result) {
 
     const hachPassword: string = 'SELECT hached_password FROM users';
     const {password} = await req.body;
 
 
-    pool.query(hachPassword, (err, res) => {
-        if (err) {
-            throw err;
-        } else {
+    pool.query(hachPassword, async (err, res) => {
+
             const convert = Object.values(res.rows)
                 .map((value: AuthModel) => value.hached_password)
                 .toString();
+            const match = await bcrypt.compare(password, convert);
 
-            bcrypt.compare(password, convert, (err, res) => {
-                if (err) {
-                    throw err;
-                } else if (!res) {
-                    console.log('FALSE, NOT OK');
-                } else {
-                    console.log('TRUE, OK');
-                }
-            })
+            if (err) {
+                throw err;
+            } else if (!match) {
+                return result.status(401).send('NO MATCH');
+            } else {
+                return result.status(200).send({
+                    //Signing a token with 1 hour of expiration
+                    token: jwt.sign({
+                        algorithm: 'RS256',
+                        exp: Math.floor(Date.now() / 1000) + (60 * 60),
+                    }, 'secret')
+                });
+            }
         }
-    })
-    res.end();
+    )
 }
 
 
