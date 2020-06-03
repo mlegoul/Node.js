@@ -22,6 +22,9 @@ async function login(req, res) {
 
         if (error) {
             return res.status(500).send(error.message);
+        } else if (!results.rows) {
+            console.log('toto');
+
         } else {
             return checkEmailIsValid(req, res);
         }
@@ -31,24 +34,29 @@ async function login(req, res) {
 async function checkEmailIsValid(req, res) {
 
     const hachPassword: string = 'SELECT hached_password FROM users';
-    const {password} = req.body;
+    const {password} = await req.body;
 
 
     pool.query(hachPassword, (err, res) => {
         if (err) {
             throw err;
         } else {
-            const convert = Object.values(res.rows).map((value: AuthModel) => value.hached_password).toString();
+            const convert = Object.values(res.rows)
+                .map((value: AuthModel) => value.hached_password)
+                .toString();
+
             bcrypt.compare(password, convert, (err, res) => {
-                if(err) {
+                if (err) {
                     throw err;
-                } else  {
-                    console.log(res);
+                } else if (!res) {
+                    console.log('FALSE, NOT OK');
+                } else {
+                    console.log('TRUE, OK');
                 }
             })
-
         }
     })
+    res.end();
 }
 
 
