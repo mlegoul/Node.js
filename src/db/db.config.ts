@@ -13,12 +13,12 @@ const pool = new pg.Pool({
 
 
 // Get request
-function getJsonInDatabase(req, res) {
+async function getJsonInDatabase(req, res) {
 
     try {
         const getJson: string = 'SELECT rss FROM rss';
 
-        pool.query(getJson, ((err, result) => {
+        await pool.query(getJson, ((err, result) => {
             if (err) {
                 return res.status(500).send({'ERROR FROM DATABASE': err.message});
             } else {
@@ -51,7 +51,7 @@ async function postJsonInDatabase(req, res) {
             if (error) {
                 return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
             } else {
-                return res.status(201).send({'OK ==> ': results.rows})
+                return res.status(201).send({'OK ==> ': results.rows});
             }
         });
     } catch (err) {
@@ -87,10 +87,10 @@ async function updateJsonInDatabase(req, res) {
 async function removeJsonInDatabase(req, res) {
 
     try {
-        const id = req.params.id;
+        const id = await req.params.id;
         const deleteJson: string = 'DELETE FROM rss where id = $1';
 
-        await pool.query(deleteJson, [id], (error, results) => {
+        pool.query(deleteJson, [id], (error, results) => {
             if (error) {
                 return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
             } else {
