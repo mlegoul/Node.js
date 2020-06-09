@@ -46,6 +46,10 @@ async function checkIsPasswordMatch(req, result) {
                 .map((value: AuthModel) => value.id)
                 .toString();
 
+            const email: string = Object.values(res.rows)
+                .map((value: AuthModel) => value.email)
+                .toString();
+
             const match = await bcrypt.compare(password, hached_password);
 
             if (err) {
@@ -53,13 +57,14 @@ async function checkIsPasswordMatch(req, result) {
             } else if (!match) {
                 return result.status(401).send('NO MATCH');
             } else {
-                return result.status(200).send({
-                    token: jwt.sign({
-                        userId: uid,
-                        algorithm: 'RS256',
-                        expiresIn: '1h',
-                    }, process.env.TOKEN_SECRET)
-                });
+                const token = jwt.sign({
+                    userId: uid,
+                    email: email,
+                    algorithm: 'RS256',
+                    expiresIn: '1h',
+                }, process.env.TOKEN_SECRET);
+
+                return result.status(200).json({id_token: token});
             }
         }
     )
