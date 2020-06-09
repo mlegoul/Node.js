@@ -64,7 +64,7 @@ async function checkIsPasswordMatch(req, result) {
                     expiresIn: '1h',
                 }, process.env.TOKEN_SECRET);
 
-                return result.status(200).json({id_token: token});
+                return result.status(200).json({token: token});
             }
         }
     )
