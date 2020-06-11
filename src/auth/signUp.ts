@@ -1,5 +1,6 @@
 import pg from 'pg';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 // Config connect bdd
@@ -27,7 +28,17 @@ async function signUp(req, res) {
                 if (error) {
                     return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
                 } else {
-                    return res.status(201).send({'OK ==> ': results.rows});
+                    const token = jwt.sign({
+                        email: email,
+                        algorithm: 'RS256',
+                        expiresIn: '1h',
+                    }, process.env.TOKEN_SECRET);
+                    return res
+                        .status(201)
+                        .json({
+                            results: results.rows,
+                            token: token,
+                        });
                 }
             });
         })

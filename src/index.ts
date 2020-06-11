@@ -3,10 +3,12 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import rssRouter from './routes/rss.routes';
 import authRouter from './routes/auth.routes';
+import dotenv from 'dotenv';
 
 
 const app = express();
 const port = process.env.PORT || 3000;
+dotenv.config();
 
 
 app.use(bodyParser.json());
