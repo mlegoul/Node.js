@@ -17,6 +17,11 @@ async function signUp(req, res) {
     try {
         const addNewUser: string = 'INSERT INTO users (email, hached_password) VALUES ($1, $2)';
         const {email, password} = await req.body;
+        const token = jwt.sign({
+            algorithm: 'RS256',
+            expiresIn: '1h',
+        }, process.env.TOKEN_SECRET);
+
 
         bcrypt.hash(password, 10, (err, hash) => {
             if (err) {
@@ -28,20 +33,13 @@ async function signUp(req, res) {
                 if (error) {
                     return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
                 } else {
-                    const token = jwt.sign({
-                        email: email,
-                        algorithm: 'RS256',
-                        expiresIn: '1h',
-                    }, process.env.TOKEN_SECRET);
-                    return res
-                        .status(201)
-                        .json({
-                            results: results.rows,
-                            token: token,
-                        });
+                    return res.status(201).json(results.rows);
                 }
             });
         })
+
+        return res.set({token: token});
+
     } catch (err) {
         throw err;
     }
