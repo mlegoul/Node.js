@@ -17,13 +17,14 @@ async function login(req, res) {
     try {
         const searchEmail: string = 'SELECT email FROM users WHERE email = $1';
         const {email} = await req.body;
+        console.log('Email =>', email);
 
         pool.query(searchEmail, [email], (err, results) => {
 
             if (err) {
                 return res.status(500).send(err.message);
             } else if (!results.rows.length) {
-                return res.status(401).send('Error with Email !');
+                return res.status(400).send('Error with Email !');
             } else {
                 return checkIsPasswordMatch(req, res);
             }
@@ -36,33 +37,31 @@ async function login(req, res) {
 async function checkIsPasswordMatch(req, result) {
 
     try {
-        const hachPassword: string = 'SELECT * FROM users';
+        const hashedPassword: string = 'SELECT hached_password FROM users';
         const {password} = await req.body;
+        const token = jwt.sign({
+            algorithm: 'RS256',
+            expiresIn: '1h',
+        }, process.env.TOKEN_SECRET);
 
 
-        pool.query(hachPassword, async (err, res) => {
+        pool.query(hashedPassword, async (err, res) => {
 
-                const hached_password: string = Object.values(res.rows)
-                    .map((value: AuthModel) => value.hached_password)
-                    .toString();
+            const hashed_password: string = Object.values(res.rows)
+                .map((value: AuthModel) => value.hached_password)
+                .toString();
 
-                const token = jwt.sign({
-                    algorithm: 'RS256',
-                    expiresIn: '1h',
-                }, process.env.TOKEN_SECRET);
+            // Verify if passwords match
+            const match = await bcrypt.compare(password, hashed_password);
 
-                // Verify if password match
-                const match = await bcrypt.compare(password, hached_password);
-
-                if (err) {
-                    throw err;
-                } else if (!match) {
-                    return result.status(401).send('Password NO MATCH');
-                } else {
-                    return result.status(200).send({token: token});
-                }
+            if (err) {
+                return result.stat(500).send(err.message);
+            } else if (!match) {
+                return result.status(401).send('Password NO MATCH');
+            } else {
+                return result.status(200).send({token: token}).end();
             }
-        )
+        });
     } catch (err) {
         throw err;
     }

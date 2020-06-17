@@ -15,32 +15,25 @@ const pool = new pg.Pool({
 async function signUp(req, res) {
 
     try {
-        const addNewUser: string = 'INSERT INTO users (email, hached_password) VALUES ($1, $2)';
-        const {email, password} = await req.body;
+        const addNewUser: string = 'INSERT INTO users (email, hached_password, username) VALUES ($1, $2, $3)';
+        const {email, password, username} = await req.body;
         const token = jwt.sign({
             algorithm: 'RS256',
             expiresIn: '1h',
         }, process.env.TOKEN_SECRET);
 
-
         bcrypt.hash(password, 10, (err, hash) => {
 
-            try {
-                pool.query(addNewUser, [email, hash], (error, results) => {
+            pool.query(addNewUser, [email, hash, username], (err, results) => {
 
-                    if (error) {
-                        return res.status(500).send({'ERROR MESSAGE FROM DATABASE : ': error.message});
-                    } else {
-                        return res.status(201).json(results.rows);
-                    }
-                });
-            } catch (err) {
-                throw err;
-            }
-        })
-
-        return res.set({token: token});
-
+                if (err) {
+                    return res.status(500).send(err.message);
+                } else {
+                    results.rows;
+                    return res.status(200).send({token: token}).end();
+                }
+            });
+        });
     } catch (err) {
         throw err;
     }
