@@ -24,7 +24,7 @@ async function checkIfEmailExist(req, res) {
             if (err) {
                 return res.status(500).send(err.message);
             } else if (result.rows.length) {
-                return res.status(400).send({message: 'Email already exist in Database'}).end();
+                return res.status(400).send('Email already exist in Database').end();
             } else {
                 return signUp(req, res);
             }
