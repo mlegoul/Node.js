@@ -12,6 +12,28 @@ const pool = new pg.Pool({
     port: 5432,
 });
 
+
+async function checkIfEmailExist(req, res) {
+
+    try {
+        const emailQueries: string = 'SELECT email FROM users WHERE email = $1';
+        const {email} = await req.body;
+
+        pool.query(emailQueries, [email], (err, result) => {
+
+            if (err) {
+                return res.status(500).send(err.message);
+            } else if (result.rows.length) {
+                return res.status(400).send({message: 'Email already exist in Database'}).end();
+            } else {
+                return signUp(req, res);
+            }
+        })
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function signUp(req, res) {
 
     try {
@@ -41,5 +63,5 @@ async function signUp(req, res) {
 
 
 export default {
-    signUp,
+    checkIfEmailExist,
 }

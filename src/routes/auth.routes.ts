@@ -6,7 +6,7 @@ import auth_login from '../auth/login';
 const authRouter = express.Router();
 
 
-authRouter.post('/signup', auth_sign_up.signUp);
+authRouter.post('/signup', auth_sign_up.checkIfEmailExist);
 authRouter.post('/login', auth_login.login);
 
 

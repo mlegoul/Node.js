@@ -17,7 +17,6 @@ async function login(req, res) {
     try {
         const searchEmail: string = 'SELECT email FROM users WHERE email = $1';
         const {email} = await req.body;
-        console.log('Email =>', email);
 
         pool.query(searchEmail, [email], (err, results) => {
 
