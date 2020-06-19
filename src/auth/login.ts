@@ -38,20 +38,24 @@ async function checkIsPasswordMatch(req, result) {
     try {
         const hashedPassword: string = 'SELECT hached_password FROM users';
         const {password} = await req.body;
-        const token = jwt.sign({
-            algorithm: 'RS256',
-            expiresIn: '1h',
-        }, process.env.TOKEN_SECRET);
 
 
         pool.query(hashedPassword, async (err, res) => {
 
             const hashed_password: string = Object.values(res.rows)
-                .map((value: AuthModel) => value.hached_password)
+                .map((value: AuthModel) => value.hashed_password)
+                .toString();
+            const username: string = Object.values(res.rows)
+                .map((value: AuthModel) => value.username)
                 .toString();
 
-            // Verify if passwords match
+            // Verify if passwords match and generate token
             const match = await bcrypt.compare(password, hashed_password);
+            const token = jwt.sign({
+                username: username,
+                algorithm: 'RS256',
+                expiresIn: '1h',
+            }, process.env.TOKEN_SECRET);
 
             if (err) {
                 return result.stat(500).send(err.message);

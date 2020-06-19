@@ -1,5 +1,6 @@
 export interface AuthModel {
-    hached_password: string,
+    hashed_password: string,
     id: string,
     email: string,
+    username: string,
 }

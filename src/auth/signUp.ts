@@ -40,6 +40,7 @@ async function signUp(req, res) {
         const addNewUser: string = 'INSERT INTO users (email, hached_password, username) VALUES ($1, $2, $3)';
         const {email, password, username} = await req.body;
         const token = jwt.sign({
+            userName: username,
             algorithm: 'RS256',
             expiresIn: '1h',
         }, process.env.TOKEN_SECRET);
