@@ -18,7 +18,7 @@ async function getJsonInDatabase(req, res) {
     try {
         const getJson: string = 'SELECT rss FROM rss';
 
-        await pool.query(getJson, ((err, result) => {
+        pool.query(getJson, ((err, result) => {
             if (err) {
                 return res.status(500).send({'ERROR FROM DATABASE': err.message});
             } else {
@@ -28,7 +28,7 @@ async function getJsonInDatabase(req, res) {
                             .reduce((acc, value) => {
                                 return {
                                     ...acc, ...value
-                                }
+                                };
                             }, {})
                     );
             }
